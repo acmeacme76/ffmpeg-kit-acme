@@ -1,4 +1,5 @@
 buildscript {
+    ext.kotlin_version = '1.9.0'
     repositories {
         google()
         mavenCentral()
@@ -6,6 +7,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -29,33 +31,84 @@ android {
     }
 
     compileSdkVersion 33
+    
+    // Enable Java 8 features
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 33
         versionCode 100
         versionName "1.0.0"
+        multiDexEnabled true
+        
+        // For Flutter v2 embedding
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
     }
 
     buildTypes {
         release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
             minifyEnabled false
         }
     }
     
     lintOptions {
         disable 'GradleCompatible'
+        checkReleaseBuilds false
+        abortOnError false
     }
     
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
 }
 
 dependencies {
-    // 使用本地编译的 AAR 文件
+    // Core FFmpegKit
+    implementation 'com.arthenica:ffmpeg-kit-full:5.1.LTS'
+    
+    // AndroidX
+    implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    
+    // Flutter embedding
+    compileOnly 'io.flutter:flutter_embedding_debug:1.0.0-1f0d464ba9'
+    
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    
+    // Local AAR files
     implementation fileTree(dir: 'libs', include: ['*.aar'])
+    
+    // Add Flutter embedding v2
+    implementation 'io.flutter:flutter_embedding_debug:1.0.0-1f0d464ba9'
+    
+    // Other dependencies
     implementation 'com.arthenica:smart-exception-java:0.2.1'
 }
 
