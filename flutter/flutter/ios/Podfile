@@ -1,0 +1,36 @@
+platform :ios, '12.1'
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  # 添加本地框架
+  pod 'FFmpegKit', :path => 'Frameworks/ffmpegkit.framework'
+  
+  # 添加其他依赖框架
+  pod 'libavcodec', :path => 'Frameworks/libavcodec.framework'
+  pod 'libavfilter', :path => 'Frameworks/libavfilter.framework'
+  pod 'libavformat', :path => 'Frameworks/libavformat.framework'
+  pod 'libavutil', :path => 'Frameworks/libavutil.framework'
+  pod 'libswresample', :path => 'Frameworks/libswresample.framework'
+  pod 'libswscale', :path => 'Frameworks/libswscale.framework'
+  pod 'libavdevice', :path => 'Frameworks/libavdevice.framework'
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    
+    # 修复 Xcode 15 兼容性问题
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        'PERMISSION_MEDIA_LIBRARY=1',
+        'PERMISSION_PHOTOS=1',
+        'PERMISSION_NOTIFICATIONS=1'
+      ]
+    end
+  end
+end

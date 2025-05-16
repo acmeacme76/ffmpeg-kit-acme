@@ -1,0 +1,20 @@
+
+Building ffmpeg-kit shared library for iOS
+
+Architectures: arm64
+Libraries: x264
+Rebuild: x264, ffmpeg
+
+Downloading sources: ok
+
+Building arm64 platform targeting iOS SDK 12.1 and Mac Catalyst 14.0
+
+x264: ok
+
+ffmpeg: ok
+
+ffmpeg-kit: ok
+
+
+Creating frameworks under prebuilt: ok
+

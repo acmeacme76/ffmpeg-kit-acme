@@ -1,7 +1,26 @@
-# FFmpegKit ![GitHub release](https://img.shields.io/badge/release-v6.0-blue.svg) ![Maven Central](https://img.shields.io/maven-central/v/com.arthenica/ffmpeg-kit-min) ![CocoaPods](https://img.shields.io/cocoapods/v/ffmpeg-kit-ios-min) ![pub](https://img.shields.io/pub/v/ffmpeg_kit_flutter.svg) ![npm](https://img.shields.io/npm/v/ffmpeg-kit-react-native.svg)
+# FFmpegKit Flutter (Custom Build) ![GitHub release](https://img.shields.io/badge/release-v1.0.0-blue.svg)
 
-## Notice
-FFmpegKit has been officially retired. There will be no further `ffmpeg-kit` releases.
+> This is a custom build of FFmpegKit for Flutter with specific codecs and features.
+
+## About This Build
+
+This is a custom build of FFmpegKit for Flutter with the following features:
+
+### Included Codecs
+- **Video**: H.264 (x264), MPEG-4 Part 2 (Xvid)
+- **Audio**: AAC, MP3, MP2, AC3, Vorbis, Opus
+- **Containers**: MP4, MOV, AVI, MKV, FLV, MP3, M4A, AAC
+
+### Build Information
+- **Version**: 1.0.0
+- **FFmpeg Version**: 4.5-dev
+- **Build Date**: May 2025
+- **License**: LGPL v3.0
+
+### Notes
+- This build does not include x265 due to compilation issues
+- Optimized for mobile platforms (Android/iOS)
+- Reduced binary size by including only essential codecs
 
 See [Saying Goodbye to FFmpegKit @ medium](https://medium.com/@tanersener/saying-goodbye-to-ffmpegkit-33ae939767e1) to learn why we made this decision.
 

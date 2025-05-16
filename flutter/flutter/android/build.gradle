@@ -9,14 +9,89 @@ buildscript {
     }
 }
 
+apply plugin: 'com.android.library'
+
 rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
+        // 添加本地 libs 目录
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+android {
+    // 兼容性设置
+    if (project.android.hasProperty("namespace")) {
+        namespace 'com.arthenica.ffmpegkit.flutter'
+    }
+
+    compileSdkVersion 33
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 33
+        versionCode 100
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    
+    lintOptions {
+        disable 'GradleCompatible'
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // 使用本地编译的 AAR 文件
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
+    implementation 'com.arthenica:smart-exception-java:0.2.1'
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        // 添加本地 libs 目录作为仓库
+        flatDir {
+            dirs "${rootProject.projectDir}/libs"
+        }
     }
 }
 
 apply plugin: 'com.android.library'
+
+// 创建 libs 目录（如果不存在）
+task createLibsDir {
+    def libsDir = new File("${rootProject.projectDir}/libs")
+    if (!libsDir.exists()) {
+        libsDir.mkdirs()
+    }
+}
+
+// 下载 FFmpegKit AAR 文件
+task downloadFfmpegKitAar(type: Download) {
+    src 'https://github.com/acmeacme76/ffmpeg-kit-acme/releases/download/v1.0.0/ffmpeg-kit-full-gpl.aar'
+    dest new File("${rootProject.projectDir}/libs", 'ffmpeg-kit-full-gpl.aar')
+    overwrite false
+    onlyIfModified true
+}
+
+// 确保在构建前创建 libs 目录并下载 AAR
+preBuild.dependsOn createLibsDir
+downloadFfmpegKitAar.dependsOn createLibsDir
+preBuild.dependsOn downloadFfmpegKitAar
 
 android {
     // Conditional for compatibility with AGP <4.2.
@@ -29,8 +104,8 @@ android {
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 33
-        versionCode 603
-        versionName "6.0.3"
+        versionCode 100
+        versionName "1.0.0"
     }
 
     buildTypes {
@@ -49,5 +124,5 @@ android {
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.5.0'
-    implementation 'com.arthenica:ffmpeg-kit-https:6.0-2'
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
 }
